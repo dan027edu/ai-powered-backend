@@ -1,0 +1,36 @@
+.env
+*/.env
+__pycache__/
+*/__pycache__/
+*.pyc
+*.pyd
+*.so
+venv/
+venv_py311/
+venv_clean/
+# Add other virtual environment names you might use
+myvenv/
+
+# Ignore specific configuration files that are for the server
+ai-doc-classifier.service
+gunicorn.conf.py
+
+# If your models are large and you manage them separately, you might ignore them too,
+# but for now, let's assume cnn_model.h5, .keras, and .pkl should be tracked IF needed by code.
+# If you decide NOT to track the .h5 because you think it's not needed, you would add:
+ml_models/weights/cnn_model.h5
+ml_models/weights/cnn_model.keras
+ml_models/weights/tokenizer.pkl
+ml_models/weights/
+ml_models/weights/cnn_model.h5
+ml_models/weights/cnn_model.keras
+ml_models/weights/tokenizer.pkl
+docbackend/ml_models/weights/cnn_model.h5
+docbackend/ml_models/weights/cnn_model.keras
+docbackend/ml_models/weights/tokenizer.pkl
+# Ignore media files uploaded locally
+media/
+
+# Operating system files
+.DS_Store
+Thumbs.db

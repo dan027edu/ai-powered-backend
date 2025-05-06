@@ -1,16 +1,18 @@
 import os
 from pathlib import Path
+from decouple import config, Csv
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-your-secret-key-here'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['192.168.1.7', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
 
 # Application definition
 INSTALLED_APPS = [
@@ -59,10 +61,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'docbackend.wsgi.application'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        # dj_database_url.config will look for the 'DATABASE_URL' env variable
+        # If 'DATABASE_URL' is not found, it will use the URL provided in 'default'
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600 # Optional, but good practice
+    )
 }
 
 # Cache settings
@@ -117,7 +121,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Tesseract settings
-TESSERACT_CMD = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+#TESSERACT_CMD = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 # Maximum upload file size: 10MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
@@ -151,8 +155,8 @@ CORS_ALLOWED_ORIGINS = [
     "exp://192.168.1.7:19000",  # For Expo development
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True  # For development only
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = config('CORS_ALLOW_ALL_ORIGINS', default=False, cast=bool)
+CORS_ALLOW_CREDENTIALS = config('CORS_ALLOW_CREDENTIALS', default=False, cast=bool)
 
 CORS_ALLOW_METHODS = [
     'DELETE',
@@ -173,9 +177,11 @@ CORS_ALLOW_HEADERS = [
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
-]
+]# Appwrite settings (optional, not in use yet)
+APPWRITE_ENDPOINT = config('APPWRITE_ENDPOINT', default=None)
+APPWRITE_PROJECT_ID = config('APPWRITE_PROJECT_ID', default=None)
+APPWRITE_API_KEY = config('APPWRITE_API_KEY', default=None)
 
-# Appwrite settings
-APPWRITE_ENDPOINT = 'your-appwrite-endpoint'
-APPWRITE_PROJECT_ID = 'your-project-id'
-APPWRITE_API_KEY = 'your-api-key'
+# Model Settings
+MODEL_DEVICE = config('MODEL_DEVICE', default=-1, cast=int)
+MODEL_CONFIDENCE_THRESHOLD = config('MODEL_CONFIDENCE_THRESHOLD', default=0.3, cast=float)

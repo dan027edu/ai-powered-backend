@@ -4,7 +4,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from core.services.document_processor import DocumentProcessor
-from core.services.cnn_classifier import CNNClassifier
+from core.services.cnn_classifier import DocumentClassifier
 from core.models import Document, Classification, Notification
 import os
 import tempfile
@@ -19,7 +19,7 @@ from django.db import transaction
 from core.utils import get_processing_lock, release_processing_lock
 
 document_processor = DocumentProcessor()
-cnn_classifier = CNNClassifier('ml_models/weights/cnn_model.h5')
+document_classifier = DocumentClassifier()  # Remove weights parameter since we're using transformers
 
 class DocumentProcessView(APIView):
     parser_classes = (MultiPartParser, FormParser)
